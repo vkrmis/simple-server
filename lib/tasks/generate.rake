@@ -105,7 +105,165 @@ def create_random_patient(address_id, language)
   Patient.create(patient)
 end
 
+def dev_organizations
+  [
+    {
+      name: "IHMI",
+      facility_groups: [
+        {
+          name: "Bathinda and Mansa",
+          facilities: [
+            { name: "CHC Buccho", district: "Bathinda", state: "Punjab" },
+            { name: "CHC Meheraj", district: "Bathinda", state: "Punjab" },
+            { name: "District Hospital Bathinda", district: "Bathinda", state: "Punjab" },
+            { name: "PHC Joga", district: "Mansa", state: "Punjab" }
+          ]
+        },
+        {
+          name: "Gurdaspur",
+          facilities: [
+            { name: "CHC Kalanaur", district: "Gurdaspur", state: "Punjab" },
+            { name: "PHC Bhumbli", district: "Gurdaspur", state: "Punjab" },
+            { name: "SDH Batala", district: "Gurdaspur", state: "Punjab" }
+          ]
+        },
+      ]
+    },
+    {
+      name: "PATH",
+      facility_groups: [
+        {
+          name: "Amir Singh Facility Group",
+          facilities: [
+            { name: "Amir Singh", district: "Mumbai", state: "Maharashtra" }
+          ]
+        },
+        {
+          name: "Dr. Anwar Facility Group",
+          facilities: [
+            { name: "Dr. Anwar", district: "Mumbai", state: "Maharashtra" }
+          ]
+        },
+        {
+          name: "Sangam Clinic Facility Group",
+          facilities: [
+            { name: "Sangam Clinic", district: "Mumbai", state: "Maharashtra" }
+          ]
+        }
+      ]
+    }
+  ]
+end
+
+def rand_date
+  (180.days.ago.to_date..Date.today).reject { |day| day.sunday? }.sample
+end
+
+def rand_systolic
+  rand(90..200)
+end
+
+def rand_diastolic
+  rand(60..110)
+end
+
+def rand_patient(facility)
+  facility.registered_patients.limit(1).order("RANDOM()").last
+end
+
 namespace :generate do
+  desc "Generate fake data for development"
+  task dev_facilities: :environment do
+    Admin.destroy_all
+    Organization.destroy_all
+    FacilityGroup.destroy_all
+    Facility.destroy_all
+    User.destroy_all
+
+    Admin.create(email: "admin@simple.org", password: "password", role: :owner)
+
+    protocol = Protocol.first
+
+    dev_organizations.each do |dev_organization|
+      organization = FactoryBot.create(:organization, name: dev_organization[:name])
+
+      dev_organization[:facility_groups].each do |dev_facility_group|
+        facility_group = FactoryBot.create(
+          :facility_group,
+          organization: organization,
+          name: dev_facility_group[:name],
+          protocol: protocol
+        )
+
+        dev_facility_group[:facilities].each do |dev_facility|
+          facility = FactoryBot.create(
+            :facility,
+            facility_group: facility_group,
+            name: dev_facility[:name],
+            district: dev_facility[:district],
+            state: dev_facility[:state]
+          )
+
+          rand(1..3).times do
+            FactoryBot.create(
+              :user,
+              facility: facility
+            )
+          end
+        end
+      end
+    end
+  end
+
+  desc "Generate fake patients for development"
+  task dev_patients: :environment do
+    PatientPhoneNumber.destroy_all
+    Patient.destroy_all
+    Address.destroy_all
+
+    Facility.all.each do |facility|
+      facility.users.each do |user|
+        rand(10..25).times do
+          patient_date = rand_date
+
+          FactoryBot.create(
+            :patient,
+            device_created_at: patient_date,
+            device_updated_at: patient_date,
+            registration_facility: facility,
+            registration_user: user
+          )
+        end
+      end
+    end
+  end
+
+  desc "Generate blood pressures for development"
+  task dev_blood_pressures: :environment do
+    BloodPressure.destroy_all
+
+    (180.days.ago.to_date..Date.today).reject { |day| day.sunday? }.each do |bp_date|
+      Facility.all.each do |facility|
+        facility.users.each do |user|
+          # Skip random users
+          next if rand(1..4) == 1
+
+          rand(0..10).times do
+            rand_patient(facility).blood_pressures.create!(
+              id: SecureRandom.uuid,
+              facility: facility,
+              user: user,
+              systolic: rand_systolic,
+              diastolic: rand_diastolic,
+              device_created_at: bp_date,
+              device_updated_at: bp_date
+            )
+          end
+        end
+      end
+    end
+  end
+
   desc 'Generate test patients for user tests'
   # Example: rake "generate:random_patients_for_user_tests[20]"
   task :random_patients_for_user_tests, [:number_of_patients_to_generate] => :environment do |_t, args|
