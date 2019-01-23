@@ -1,86 +1,26 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
-
-facilities = [
-  { name:          "CHC Nathana",
-    facility_type: "CHC",
-    district:      "Bathinda",
-    state:         "Punjab",
-    country:       "India" },
-
-  { name:          "CHC Bagta",
-    facility_type: "CHC",
-    district:      "Bathinda",
-    state:         "Punjab",
-    country:       "India" },
-
-  { name:          "CHC Buccho",
-    facility_type: "CHC",
-    district:      "Bathinda",
-    state:         "Punjab",
-    country:       "India" },
-
-  { name:          "PHC Meheraj",
-    facility_type: "PHC",
-    district:      "Bathinda",
-    state:         "Punjab",
-    country:       "India" },
-
-  { name:          "CHC Khyalakalan",
-    facility_type: "CHC",
-    district:      "Mansa",
-    state:         "Punjab",
-    country:       "India" },
-
-  { name:          "PHC Joga",
-    facility_type: "PHC",
-    district:      "Mansa",
-    state:         "Punjab",
-    country:       "India" }]
-
 protocol_data = {
   name:           'Punjab Hypertension Protocol',
   follow_up_days: 30
 }
 
 protocol_drugs_data = [
-  {
-    name:   'Amlodipine',
-    dosage: '5 mg'
-  },
-  {
-    name:   'Amlodipine',
-    dosage: '10 mg'
-  },
-  {
-    name:   'Telmisartan',
-    dosage: '40 mg'
-  },
-  {
-    name:   'Telmisartan',
-    dosage: '80 mg'
-  },
-  {
-    name:   'Chlorthalidone',
-    dosage: '12.5 mg'
-  },
-  {
-    name:   'Chlorthalidone',
-    dosage: '25 mg'
-  }
+  { name: 'Amlodipine', dosage: '5 mg' },
+  { name: 'Amlodipine', dosage: '10 mg' },
+  { name: 'Telmisartan', dosage: '40 mg' },
+  { name: 'Telmisartan', dosage: '80 mg' },
+  { name: 'Chlorthalidone', dosage: '12.5 mg' },
+  { name: 'Chlorthalidonex', dosage: '25 mg' },
+  { name: 'Losartan', dosage: '50 mg' },
+  { name: 'Losartan', dosage: '100 mg' },
+  { name: 'Atenolol', dosage: '25 mg' },
+  { name: 'Atenolol', dosage: '50 mg' },
+  { name: 'Hydrochlorothiazide', dosage: '12.5 mg' },
+  { name: 'Hydrochlorothiazide', dosage: '25 mg' },
+  { name: 'Aspirin', dosage: '75 mg' },
+  { name: 'Aspirin', dosage: '150 mg' },
+  { name: 'Enalapril', dosage: '5 mg' },
+  { name: 'Enalapril', dosage: '10 mg' },
 ]
-
-organization = FactoryBot.create(:organization)
-facility_group   = FactoryBot.create(:facility_group, organization: organization)
-
-facilities.each do |facility_data|
-  Facility.find_or_create_by(facility_data.merge(facility_group_id: facility_group.id))
-end
 
 protocol = Protocol.find_or_create_by(protocol_data)
 protocol_drugs_data.each do |drug_data|
