@@ -56,7 +56,7 @@
     }
       
     .column-value {
-        font-size: 16px;
+        font-size: 22px;
         margin-bottom: 4px;
     }
       
@@ -99,7 +99,7 @@
 
 <% if @total_patients_count > 0 %>
   <div class="card">
-    <div class="row-value" style="font-weight: 500;"><%= pluralize(@total_patients_count, 'patient') %></div>
+    <div class="row-value" style="font-weight: 500; margin-top: 2px;"><%= pluralize(@total_patients_count, 'patient') %></div>
     <h3>All enrolled patients</h3>
 
     <% @patients_enrolled_per_month.each do |month, enrolled_count| %>
