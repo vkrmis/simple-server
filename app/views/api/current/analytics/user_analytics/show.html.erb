@@ -76,7 +76,7 @@
 
 <body>
 <div class="card">
-    <h3>How many patients have BP measured at <%= @current_facility.name %> each week?</h3>
+    <h3>How many patients have a BP measured at <%= @current_facility.name %> each week?</h3>
     <div class="bar-chart">
       <table>
         <tr>
@@ -99,7 +99,7 @@
 
 <% if @total_patients_count > 0 %>
   <div class="card">
-    <div class="row-value"><%= pluralize(@total_patients_count, 'patient') %></div>
+    <div class="row-value" style="font-weight: 500;"><%= pluralize(@total_patients_count, 'patient') %></div>
     <h3>All enrolled patients</h3>
 
     <% @patients_enrolled_per_month.each do |month, enrolled_count| %>
