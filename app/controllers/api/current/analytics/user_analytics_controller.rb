@@ -53,6 +53,6 @@ class Api::Current::Analytics::UserAnalyticsController < Api::Current::Analytics
   end
 
   def graph_label(value, from_date_string, to_date_string)
-    "<div class='graph-label'><p>#{from_date_string}</p><p>#{to_date_string}</p>".html_safe
+    "<div class='graph-label'><div class='label-1'>#{from_date_string}</div><div class='label-2'>#{to_date_string}</div>".html_safe
   end
 end
