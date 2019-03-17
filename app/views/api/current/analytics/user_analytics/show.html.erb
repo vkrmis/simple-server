@@ -5,6 +5,14 @@
   <%= render "shared/inline_styles" %>
  
   <style>
+    .bar-chart {
+        clear: both;
+        overflow: scroll;
+        margin-left: -16px;
+        min-width: 100%;
+        direction: rtl;
+    }
+      
     .bar-chart table {
         font-size: 14px;
         margin-top: 8px;
@@ -13,41 +21,50 @@
         border-collapse: collapse;
     }
     
-    .bar-chart table td {
+    .bar-chart td {
         vertical-align: bottom;
         padding: 0;
         margin: 0;
-        height: 270px;
+    }
+      
+    .bar-chart td.bars {
+        height: 220px;
+        background-image: linear-gradient(to bottom, #fff 10px, #F0F2F6 10px, #fff 11px, #fff 20px, #F0F2F6 20px, #fff 21px, #fff 30px, #F0F2F6 30px, #fff 31px, #fff 40px, #F0F2F6 40px, #fff 41px, #fff 50px, #F0F2F6 50px, #fff 51px, #fff 60px, #F0F2F6 60px, #fff 61px, #fff 70px, #F0F2F6 70px, #fff 71px, #fff 80px, #F0F2F6 80px, #fff 81px, #fff 90px, #F0F2F6 90px, #fff 91px, #fff 100px, #F0F2F6 100px, #fff 101px, #fff 110px, #F0F2F6 110px, #fff 111px, #fff, #fff 110px, #F0F2F6 110px, #fff 111px, #fff, #fff 110px, #F0F2F6 110px, #fff 111px, #fff, #fff 120px, #F0F2F6 120px, #fff 121px, #fff, #fff 130px, #F0F2F6 130px, #fff 131px, #fff, #fff 140px, #F0F2F6 140px, #fff 141px, #fff, #fff 150px, #F0F2F6 150px, #fff 151px, #fff, #fff 160px, #F0F2F6 160px, #fff 161px, #fff, #fff 170px, #F0F2F6 170px, #fff 171px, #fff, #fff 180px, #F0F2F6 180px, #fff 181px, #fff, #fff 190px, #F0F2F6 190px, #fff 191px, #fff, #fff 200px, #F0F2F6 200px, #fff 201px, #fff, #fff 210px, #F0F2F6 210px, #fff 211px, #fff, #fff 220px, #F0F2F6 220px, #fff 221px,  #fff 230px, #F0F2F6 230px, #fff 231px, #fff 240px, #F0F2F6 240px, #fff 241px, #fff 250px, #F0F2F6 250px, #fff 251px, #fff 260px, #F0F2F6 260px, #fff 261px, #fff 270px, #F0F2F6 270px, #fff 271px);
+    }
+      
+    .bar-chart td.bar-labels {
+        border-top: 1px solid #ADB2B8;
+        white-space: nowrap;
     }
     
     .bar-chart-column {
-        background: #e0f0ff;
+        background: #C4F0D5;
         color: #6c737a;
         text-align: center;
         border-radius: 4px 4px 0 0;
         margin: 0 4px;
         min-height: 8px;
+        min-width: 74px;
     }
     
     .bar-chart .active-column {
-        background: #0075eb;
+        background: #00B849;
     }
       
     .graph-label {
         display: block;
         font-size: 14px;
         margin-top: 8px;
-        line-height: 1.3;
+        line-height: 1.4;
     }
       
     .graph-label .label-2 {
       color: #ADB2B8;
-      font-size: 12px;
+      font-size: 14px;
     }
       
     .label-date {
         display: block;
-        border-top: 1px solid #ADB2B8;
     }
       
     .column-value {
@@ -58,6 +75,7 @@
     .row-data {
         padding: 8px;
         border-top: 1px solid #eee;
+        clear: both;
     }
       
     .row-value {
@@ -65,25 +83,46 @@
         font-size: 15px;
         padding-top: 2px;
     }
+      
+    .row-head {
+        border-color: #E9DFBB;
+        border-bottom: 1px solid #EFECDF;
+        z-index: 10000;
+        margin-top: 16px;
+        margin-bottom: -1px;
+        background: #FFFCF0;
+        position: relative;
+        clear: both;
+    }
   </style>
 </head>
 
 <body>
 
 <div class="card">
-    <h3>How many patients have a BP measured at <%= @current_facility.name %> each week?</h3>
+    
+    <div class="icon-float"><%= render "shared/icon_new_bp" %></div>
+    
+    <h3>How many patients have a BP measured each week?</h3>
+    <h5><%= @current_facility.name %></h5>
     <div class="bar-chart">
       <table>
         <tr>
-          <% @formatted_stats.each do |key, labelled_value| %>
-            <td>
-                <div class="column-value"><%= labelled_value[:value] %></div>
+          <% @formatted_stats.reverse_each do |key, labelled_value| %>
+            <td class="bars">
+                <div class="column-value" style="background"><%= labelled_value[:value] %></div>
                 <%= content_tag 'div', nil,
                               class: "bar-chart-column #{'active-column' if key == @max_key}",
                               style: column_height_styles(
                                   labelled_value[:value],
                                   max_value: @max_value,
                                   max_height: 200) %>
+            </td>
+          <% end %>
+        </tr>
+        <tr>
+          <% @formatted_stats.each do |key, labelled_value| %>
+            <td class="bar-labels">
               <span class="label-date"><%= labelled_value[:label] %></span>
             </td>
           <% end %>
@@ -94,8 +133,12 @@
 
 <% if @total_patients_count > 0 %>
   <div class="card">
-    <h3>How many patients are enrolled at <%= @current_facility.name %>?</h3>
-    <div class="row-data" style="border-color: #E0B000; border-bottom: 1px solid #E0B000; z-index: 10000; margin-top: 16px; margin-bottom: -1px; background: #FFF8E0; position: relative;">
+      
+    <div class="icon-float"><%= render "shared/icon_enroll" %></div>
+      
+    <h3>How many patients are enrolled?</h3>
+    <h5><%= @current_facility.name %></h5>
+    <div class="row-data row-head">
         <div class="row-value" style="font-weight: 500;"><%= pluralize(@total_patients_count, 'patient') %></div>
         <h4 style="font-weight: 500;">Total enrolled</h4>
     </div>
