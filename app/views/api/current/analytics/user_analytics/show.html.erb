@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, shrink-to-fit=no"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
   
   <%= render "shared/inline_styles" %>
  
@@ -61,8 +56,7 @@
     }
       
     .row-data {
-        padding-top: 8px;
-        margin-top: 8px;
+        padding: 8px;
         border-top: 1px solid #eee;
     }
       
@@ -75,6 +69,7 @@
 </head>
 
 <body>
+
 <div class="card">
     <h3>How many patients have a BP measured at <%= @current_facility.name %> each week?</h3>
     <div class="bar-chart">
@@ -99,9 +94,11 @@
 
 <% if @total_patients_count > 0 %>
   <div class="card">
-    <div class="row-value" style="font-weight: 500; margin-top: 2px;"><%= pluralize(@total_patients_count, 'patient') %></div>
-    <h3>All enrolled patients</h3>
-
+    <h3>How many patients are enrolled at <%= @current_facility.name %>?</h3>
+    <div class="row-data" style="border-color: #E0B000; border-bottom: 1px solid #E0B000; z-index: 10000; margin-top: 16px; margin-bottom: -1px; background: #FFF8E0; position: relative;">
+        <div class="row-value" style="font-weight: 500;"><%= pluralize(@total_patients_count, 'patient') %></div>
+        <h4 style="font-weight: 500;">Total enrolled</h4>
+    </div>
     <% @patients_enrolled_per_month.each do |month, enrolled_count| %>
       <div class="row-data">
         <div class="row-value"><%= pluralize(enrolled_count, 'patient') %></div>
@@ -110,6 +107,6 @@
     <% end %>
   </div>
 <% end %>
-
+    
 </body>
 </html>
