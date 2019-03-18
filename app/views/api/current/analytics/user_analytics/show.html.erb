@@ -116,7 +116,7 @@
                               style: column_height_styles(
                                   labelled_value[:value],
                                   max_value: @max_value,
-                                  max_height: 200) %>
+                                  max_height: 180) %>
             </td>
           <% end %>
         </tr>
@@ -126,7 +126,6 @@
               <span class="label-date"><%= labelled_value[:label] %></span>
             </td>
           <% end %>
-        </tr>
       </table>
     </div>
 </div>
@@ -136,7 +135,7 @@
       
     <div class="icon-float"><%= render "shared/icon_enroll" %></div>
       
-    <h3>How many patients are enrolled?</h3>
+    <h3>How many patients did your team enroll?</h3>
     <h5><%= @current_facility.name %></h5>
     <div class="row-data row-head">
         <div class="row-value" style="font-weight: 500;"><%= pluralize(@total_patients_count, 'patient') %></div>
