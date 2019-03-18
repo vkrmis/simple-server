@@ -121,7 +121,7 @@
           <% end %>
         </tr>
         <tr>
-          <% @formatted_stats.each do |key, labelled_value| %>
+          <% @formatted_stats.reverse_each do |key, labelled_value| %>
             <td class="bar-labels">
               <span class="label-date"><%= labelled_value[:label] %></span>
             </td>
