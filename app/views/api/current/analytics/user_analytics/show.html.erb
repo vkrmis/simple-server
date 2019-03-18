@@ -103,7 +103,7 @@
     
     <div class="icon-float"><%= render "shared/icon_new_bp" %></div>
     
-    <h3>How many patients have a BP measured each week?</h3>
+    <h3>How many patients have a BP recorded each week?</h3>
     <h5><%= @current_facility.name %></h5>
     <div class="bar-chart">
       <table>
@@ -135,7 +135,7 @@
       
     <div class="icon-float"><%= render "shared/icon_enroll" %></div>
       
-    <h3>How many patients did your team enroll?</h3>
+    <h3>How many patients did your team enroll each month?</h3>
     <h5><%= @current_facility.name %></h5>
     <div class="row-data row-head">
         <div class="row-value" style="font-weight: 500;"><%= pluralize(@total_patients_count, 'patient') %></div>
