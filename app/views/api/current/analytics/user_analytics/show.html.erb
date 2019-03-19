@@ -61,6 +61,7 @@
     .graph-label .label-2 {
       color: #ADB2B8;
       font-size: 14px;
+      min-height: 20px;
     }
       
     .label-date {
@@ -110,7 +111,7 @@
         <tr>
           <% @formatted_stats.reverse_each do |key, labelled_value| %>
             <td class="bars">
-                <div class="column-value" style="background"><%= labelled_value[:value] %></div>
+                <div class="column-value"><%= labelled_value[:value] %></div>
                 <%= content_tag 'div', nil,
                               class: "bar-chart-column #{'active-column' if key == @max_key}",
                               style: column_height_styles(
