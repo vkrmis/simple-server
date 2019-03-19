@@ -16,7 +16,7 @@
 
 <div class="card">
     
-    <div class="icon-float"><%= render "shared/icon_new_bp" %></div>
+    <%= inline_svg('icon_new_bp.svg', classname: 'icon-float') %>
     
     <h3>How many patients have a BP recorded each week?</h3>
     <h5><%= @current_facility.name %></h5>
