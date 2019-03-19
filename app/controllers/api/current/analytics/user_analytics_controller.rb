@@ -47,8 +47,8 @@ class Api::Current::Analytics::UserAnalyticsController < Api::Current::Analytics
 
   def label_for_week(week, value)
     return graph_label(value, 'This week', '') if week == Date.today.at_beginning_of_week(start_day = :sunday)
-    start_date = week.at_beginning_of_week
-    end_date = week.at_end_of_week
+    start_date = week.at_beginning_of_week(start_day = :sunday)
+    end_date = start_date.at_end_of_week(start_day = :sunday)
     graph_label(value, start_date.strftime('%b %e'), 'to ' + end_date.strftime('%b %e'))
   end
 
