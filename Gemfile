@@ -1,11 +1,13 @@
 source 'https://rubygems.org'
 
+ruby "2.5.1"
+
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.6.1'
+gem 'rails', '~> 5.2.2.1'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'passenger'
 gem 'sassc-rails'
@@ -32,6 +34,7 @@ gem 'discard', '~> 1.0'
 gem 'friendly_id', '~> 5.2.4'
 gem 'kaminari'
 gem 'phonelib'
+gem 'bootsnap', '>= 1.1.0', require: false
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
