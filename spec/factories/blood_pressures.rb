@@ -11,23 +11,23 @@ FactoryBot.define do
     user
 
     trait :critical do
-      systolic 181
-      diastolic 111
+      systolic { 181 }
+      diastolic { 111 }
     end
 
     trait :very_high do
-      systolic 160
-      diastolic 100
+      systolic { 160 }
+      diastolic { 100 }
     end
 
     trait :high do
-      systolic 140
-      diastolic 90
+      systolic { 140 }
+      diastolic { 90 }
     end
 
     trait :under_control do
-      systolic 80
-      diastolic 60
+      systolic { 80 }
+      diastolic { 60 }
     end
   end
 end

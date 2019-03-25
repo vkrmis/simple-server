@@ -7,14 +7,14 @@ FactoryBot.define do
     device_updated_at { Time.now }
     device_created_at { Time.now }
     sync_approval_status { User.sync_approval_statuses[:allowed] }
-    sync_approval_status_reason nil
+    sync_approval_status_reason { nil }
     facility
 
     trait :created_on_device do
       id { SecureRandom.uuid }
       password_digest { BCrypt::Password.create(password) }
-      password nil
-      password_confirmation nil
+      password { nil }
+      password_confirmation { nil }
     end
 
     trait :sync_allowed do
