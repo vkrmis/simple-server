@@ -4,28 +4,29 @@ file = "/home/deploy/who_stats.csv"
 def registered(facilities, cohort_start, cohort_end)
   Patient.select(%Q(
     patients.*,
-    oldest_bps.device_created_at as first_bp_date,
-    oldest_bps.systolic as first_systolic,
-    oldest_bps.diastolic as first_diastolic
+    oldest_bps.device_created_at as bp_device_created_at,
+    oldest_bps.facility_id as bp_facility_id,
+    oldest_bps.systolic as bp_systolic,
+    oldest_bps.diastolic as bp_diastolic
   )).joins(%Q(
     INNER JOIN (
       SELECT DISTINCT ON (patient_id) *
       FROM blood_pressures
-      WHERE device_created_at >= '#{cohort_start}'
-      AND device_created_at <= '#{cohort_end}'
-      AND facility_id IN ('#{Array(facilities).map(&:id).join('\',\'')}')
       ORDER BY patient_id, device_created_at ASC
     ) as oldest_bps
     ON oldest_bps.patient_id = patients.id
-  ))
+  )).where(
+    "oldest_bps.device_created_at" => cohort_start..cohort_end,
+    "oldest_bps.facility_id" => facilities
+  )
 end
 
 def visited(patients, quarter_start, quarter_end)
   patients.select(%Q(
     patients.*,
-    newest_bps.device_created_at as last_bp_date,
-    newest_bps.systolic as last_systolic,
-    newest_bps.diastolic as last_diastolic
+    newest_bps.device_created_at as bp_device_created_at,
+    newest_bps.systolic as bp_systolic,
+    newest_bps.diastolic as bp_diastolic
   )).joins(%Q(
     INNER JOIN (
       SELECT DISTINCT ON (patient_id) *
@@ -39,11 +40,11 @@ def visited(patients, quarter_start, quarter_end)
 end
 
 def controlled(patients)
-  patients.select { |p| p.last_systolic < 140 && p.last_diastolic < 90 }
+  patients.select { |p| p.bp_systolic < 140 && p.bp_diastolic < 90 }
 end
 
 def uncontrolled(patients)
-  patients.select { |p| p.last_systolic >= 140 || p.last_diastolic >= 90 }
+  patients.select { |p| p.bp_systolic >= 140 || p.bp_diastolic >= 90 }
 end
 
 def cohort_stats(facility, cohort_start, cohort_end, quarter_start, quarter_end)
