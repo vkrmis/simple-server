@@ -15,13 +15,13 @@
   (let [parsed-metadata (group-by :tag (get-in response [:content 0 :content]))]
     {:phone-number  (get-in parsed-metadata [:PhoneNumber 0 :content 0])
      :dnd           (get-in parsed-metadata [:DND 0 :content 0])
-     :type          (get-in parsed-metadata [:Type 0 :content 0])}))
+     :phone-type          (get-in parsed-metadata [:Type 0 :content 0])}))
 
 (defn whitelist-details-from-response [response]
   (let [parsed-metadata (group-by :tag (get-in response [:content 0 :content]))]
     {:status  (get-in parsed-metadata [:Status 0 :content 0])
      :expiry  (get-in parsed-metadata [:Expiry 0 :content 0])
-     :type    (get-in parsed-metadata [:Type 0 :content 0])}))
+     :user-type    (get-in parsed-metadata [:Type 0 :content 0])}))
 
 (defn get-metadata [number]
   (-> number
@@ -37,5 +37,7 @@
 
 
 (do
-  (let [numbers (rest *command-line-args*)]
-    (println (get-whitelist-details (first numbers)))))
+  (let [number (first (rest *command-line-args*))
+        whitelist-details (get-whitelist-details number)
+        metadata (get-metadata number)]
+    (println (merge metadata whitelist-details))))
