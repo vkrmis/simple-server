@@ -56,8 +56,18 @@ describe AuditLog, type: :model do
     let(:action) { 'fetch' }
 
     it 'schedules a job to create audit logs in the background' do
-      assert_enqueued_jobs 1, only: CreateAuditLogsJob do
+      expect {
         AuditLog.create_logs_async(user, records, action)
+      }.to change(CreateAuditLogsWorker.jobs, :size).by(1)
+      CreateAuditLogsWorker.clear
+    end
+
+    describe '#perform_async' do
+      it 'queues the job on the exotel_phone_whitelist queue' do
+        expect {
+          UpdatePhoneNumberDetailsJob.perform_async(patient_phone_number.id, account_sid, token)
+        }.to change(Sidekiq::Queues['phone_number_details_queue'], :size).by(1)
+        UpdatePhoneNumberDetailsJob.clear
       end
     end
 
